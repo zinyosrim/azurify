@@ -1,0 +1,25 @@
+{
+    "workbench.colorCustomizations": {
+        "titleBar.activeForeground": "#f7f0f0",
+        "titleBar.inactiveForeground": "#f7f0f0",
+        "titleBar.activeBackground": "#1f9bc1ec",
+        "titleBar.inactiveBackground":"#006382ec"
+    },
+    "azureFunctions.deploySubpath": ".",
+    "azureFunctions.scmDoBuildDuringDeployment": true,
+    "azureFunctions.pythonVenv": ".venv",
+    "azureFunctions.projectLanguage": "Python",
+    "azureFunctions.projectRuntime": "~4",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.projectLanguageModel": 2,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./azurify",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "editor.rulers": [80, 100, 120]
+}
