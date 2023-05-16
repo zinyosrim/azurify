@@ -97,4 +97,7 @@ Directory structure:
     twine check dist/*
     twine upload -r testpypi dist/*
 
+### Upload to Pypi
+    twine upload dist/*
+
 [src]: https://github.com/zinyosrim/azurify

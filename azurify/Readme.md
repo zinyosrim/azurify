@@ -22,6 +22,18 @@ Additionally create these:
     export AZURE_DEFAULT_OBJECT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     export AZURE_DEFAULT_LOCATION=uscentral
 
+or run following Python script:
+
+    import os
+    
+    os.environ["AZURE_SUBSCRIPTION_ID"] = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    os.environ["AZURE_TENANT_ID"] = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    os.environ["AZURE_CLIENT_ID"] = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    os.environ["AZURE_CLIENT_SECRET"] = "xxxxxx-xxxxxxxxxxxx-xxxxxxxxxx-xxxxxxxx"
+    os.environ["AZURE_DEFAULT_GROUP_NAME"] = "my-resources"
+    os.environ["AZURE_DEFAULT_LOCATION"] = "uscentral"
+    os.environ["AZURE_DEFAULT_OBJECT_ID"] = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
 ## Sample
     from azure.identity import DefaultAzureCredential
 
@@ -68,3 +80,18 @@ Additionally create these:
 
     if __name__ == "__main__":
         main()
+
+## Usage
+
+### Create Keyvault
+    from azurify.azkeyvault import Keyvault, generate_shopify_keyvault_name
+
+    shop_url = "mystore.myshopify.com"
+
+    # Generate a name including the 1st part of the URL + random characters
+    kv_name = generate_shopify_keyvault_name(shop_url)
+    
+    kv = Keyvault(kv_name=kv_name)
+    kv.create()
+    
+    print(f"Created keyvault `https://{kv.keyvault.name}.vault.azure.net`in `{kv.keyvault.location}`.")
