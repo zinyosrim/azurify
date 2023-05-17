@@ -3,6 +3,7 @@ import sys
 import random
 import re
 import string
+import logging
 
 from typing import Protocol
 from dataclasses import dataclass
@@ -49,6 +50,32 @@ def keyvault_client() -> KeyVaultManagementClient:
         subscription_id=DEFAULT_SUBSCRIPTION_ID,
     )
 
+
+def shopify_store_name(shop_url: str) -> str:
+    """Parse shop URL and return 1st part 
+
+    Args:
+        shop_url (str): xxx.myshopify.com URL
+
+    Raises:
+        ValueError: if structure not xxx.myshopify.com
+        ValueError: if 1st part nor alphanumeric
+
+    Returns:
+        str: 1st part of URL
+    """
+    
+    url_parts = shop_url.split(".")
+    if len(url_parts) != 3 or url_parts[1] != "myshopify" or url_parts[2] != "com":
+        raise ValueError(f"`{shop_url}` doesn't seem to be a Shopify URL. Must be `<name>.myshopify.com`.")
+
+    store_name = url_parts[0]
+    if re.match(store_name, "^[\w-_]+$") == False:
+        raise ValueError(f"Can not create an Azure keyvault from the shop_url `{shop_url}`. Only alphanumeric and hyphens are allowed")
+
+    return store_name
+
+
 def generate_shopify_keyvault_name(shop_url: str) -> str:
     """Generate randomized name for keyvault of length 24
 
@@ -56,13 +83,11 @@ def generate_shopify_keyvault_name(shop_url: str) -> str:
         kv_name (str): desired name
 
     Returns:
-        str: name with structure `kv-<name>-<random string>`eg. kv-aaaabbbb-bdgmbzynpbax 
+        str: name with structure `kv-<name>-<random string>`eg. kv-aaaabbbb-mdgmbzynpbax 
     """
+    kv_name = shopify_store_name(shop_url)
 
-    kv_name = shop_url.split(".")[0]
-    if re.match(kv_name, "^[\w-_]+$") == False:
-        raise ValueError(f"Can not create an Azure keyvault from the shop_url `{shop_url}`. Only alphanumeric and hyphens are allowed")
-    
+    # Create Azure compliant keyvault name. Shorten name if too long. Otherwise add random characters
     kv_name_length = len(kv_name)
     if kv_name_length > 20:
         return f"kv-{kv_name[:21]}"
@@ -135,6 +160,8 @@ def main(shop_url: str) -> None:
     kv.create()
 
     print(f"Created keyvault `https://{kv.keyvault.name}.vault.azure.net`in `{kv.keyvault.location}`.")
+    logging.info(f"Created keyvault `https://{kv.keyvault.name}.vault.azure.net`in `{kv.keyvault.location}`.")
+
 
 if __name__ == "__main__":
     args = sys.argv[1:]

@@ -95,3 +95,37 @@ or run following Python script:
     kv.create()
     
     print(f"Created keyvault `https://{kv.keyvault.name}.vault.azure.net`in `{kv.keyvault.location}`.")
+
+### Get Keyvault Properties
+    from azurify.azkeyvault import Keyvault, generate_shopify_keyvault_name
+    from azurify.azsecrets import AzureSecrets
+
+    shop_url = "mystore.myshopify.com"
+    kv_name = generate_shopify_keyvault_name(shop_url)
+    print(kv_name)
+    # kv-mystore-xxxxxxxxxxxxx
+    kv = Keyvault(kv_name=kv_name)
+
+    print(kv.keyvault)
+    # kv-mystore-xxxxxxxxxxxxx
+
+### Create secrets from file
+    """content of mysecrets.json
+    {
+        "SHOPDOMAIN": "mystore.myshopify.com",
+        "APIVERSION": "2023-04",
+        "APIACCESSTOKEN": "<api access token>",
+        "APICLIENTSECRETKEY": "<api secret, starting with sh..>"
+        "AZSTORAGECONNSTR": "<Azure storage connection string>"
+    }
+    """
+    
+    from azure.identity import DefaultAzureCredential
+    from azurify.azsecrets import AzureSecrets
+    
+    vault_url = "https://kv-bingobongo-xhlfuyngyn.vault.azure.net"
+    secrets = AzureSecrets(vault_url = vault_url, credential=DefaultAzureCredential()
+                           )
+    secrets.load_jsonfile("mysecrets.json")
+  
+    

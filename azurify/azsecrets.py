@@ -36,7 +36,10 @@ class Secrets(Protocol):
 
 
 class AzureSecrets:
-    def __init__(self, vault_url: str, credential):
+    """Shopify secrets management on Azure. Create, get, delete secrets, load from file
+    """
+
+    def __init__(self, vault_url: str, credential=DefaultAzureCredential()):
         """Populate secrets dict with Keys/Values from the Azure KeyVault and create
         an instance attribute for each secret
 
@@ -55,7 +58,7 @@ class AzureSecrets:
             # create instance attribute
             setattr(self, key, value)
 
-    def load_jsonfile(self, path: str) -> None:
+    def load_json(self, path: str) -> None:
         """Load secrets from file
 
         Args:
@@ -127,6 +130,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-    """
-    secrets = AzureSecrets(vault_url="https://kv-langerchen.vault.azure.net/", credential=DefaultAzureCredential(),)
-    """
+

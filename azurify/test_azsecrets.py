@@ -14,12 +14,12 @@ class TestAzureSecrets(unittest.TestCase):
     def setUp(self):
         # Create randomized keyvault name and keyvault
         _random_str = "".join(random.choices(string.ascii_lowercase, k=10))
-        _keyvault_name = f"kv-test-{_random_str}"
-        Keyvault(tresor_name=_keyvault_name, keyvault_client=keyvault_client()).create()
+        self._keyvault_name = f"kv-test-{_random_str}"
+        Keyvault(kv_name=self._keyvault_name).create()
 
         # create secrets management object
         self.azsecrets = AzureSecrets(
-            vault_url=f"https://{_keyvault_name}.vault.azure.net/",
+            vault_url=f"https://{self._keyvault_name}.vault.azure.net/",
             credential=DefaultAzureCredential(),
         )
 
@@ -31,7 +31,6 @@ class TestAzureSecrets(unittest.TestCase):
             "APICLIENTSECRETKEY": "222",
             "AZSTORAGECONNSTR": "abc",
         }
-        self.azsecrets.load_json("test_data.json")
 
         # test-data with invalid keys
         self.test_data_incorrect_keys = {
@@ -52,14 +51,12 @@ class TestAzureSecrets(unittest.TestCase):
         with open("test_data_incorrect_keys.json", "w") as outfile:
             outfile.write(json_object_incorrect)
 
+        self.azsecrets.load_json("test_data.json")
+
     def test_load_jsonfile(self):
         # read secrets data from file
-        secrets = AzureSecrets(
-            vault_url=f"https://{self._keyvault_name}.vault.azure.net/",
-            credential=DefaultAzureCredential(),
-        )
-        secrets.load_json("test_data.json")
-        assert secrets.SHOPDOMAIN == "dcboard.myshopify.com"
+        #self.azsecrets.load_json("test_data.json")
+        assert self.azsecrets.SHOPDOMAIN == "dcboard.myshopify.com"
 
     def test_load_file_with_wrong_keys(self):
         secrets = AzureSecrets(
