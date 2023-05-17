@@ -28,23 +28,25 @@ create your environment variables:
 
 Run:
 
-    from azure.identity import DefaultAzureCredential
-    from azurify.azsecrets import AzureSecrets
+```python
+from azure.identity import DefaultAzureCredential
+from azurify.azsecrets import AzureSecrets
 
-    AZURE_KEYVAULT_NAME = "enter your keyvault name here"
+AZURE_KEYVAULT_NAME = "enter your keyvault name here"
 
-    def main():
-        """Simple test case"""
-        azsecrets = AzureSecrets(
-            vault_url=f"https://{AZURE_KEYVAULT_NAME}.vault.azure.net/",
-            credential=DefaultAzureCredential(),
-        )
+def main():
+    """Simple test case"""
+    azsecrets = AzureSecrets(
+        vault_url=f"https://{AZURE_KEYVAULT_NAME}.vault.azure.net/",
+        credential=DefaultAzureCredential(),
+    )
 
-        print(azsecrets.SHOPDOMAIN)
+    print(azsecrets.SHOPDOMAIN)
 
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
+```
 
 Prints `myshop.myshopify.com`
 
