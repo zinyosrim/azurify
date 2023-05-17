@@ -15,6 +15,7 @@ Required variables to run Azure functions in general:
     export AZURE_CLIENT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     export AZURE_CLIENT_SECRET=xxxxxx-xxxxxxxxxxxx-xxxxxxxxxx-xxxxxxxx
     export AZURE_TENANT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    
 
 Additionally create these:
 
@@ -24,6 +25,7 @@ Additionally create these:
 
 or run following Python script:
 
+    ```python
     import os
     
     os.environ["AZURE_SUBSCRIPTION_ID"] = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -33,8 +35,10 @@ or run following Python script:
     os.environ["AZURE_DEFAULT_GROUP_NAME"] = "my-resources"
     os.environ["AZURE_DEFAULT_LOCATION"] = "uscentral"
     os.environ["AZURE_DEFAULT_OBJECT_ID"] = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    ```
 
 ## Sample
+    ```python
     from azure.identity import DefaultAzureCredential
 
     from azurify.azconverter import factory
@@ -80,10 +84,11 @@ or run following Python script:
 
     if __name__ == "__main__":
         main()
-
+    ```
 ## Usage
 
 ### Create Keyvault
+    ```python
     from azurify.azkeyvault import Keyvault, generate_shopify_keyvault_name
 
     shop_url = "mystore.myshopify.com"
@@ -95,8 +100,10 @@ or run following Python script:
     kv.create()
     
     print(f"Created keyvault `https://{kv.keyvault.name}.vault.azure.net`in `{kv.keyvault.location}`.")
+    ```
 
 ### Get Keyvault Properties
+    ```python
     from azurify.azkeyvault import Keyvault, generate_shopify_keyvault_name
     from azurify.azsecrets import AzureSecrets
 
@@ -108,8 +115,10 @@ or run following Python script:
 
     print(kv.keyvault)
     # kv-mystore-xxxxxxxxxxxxx
+    ```
 
 ### Create secrets from file
+    ```python
     """content of mysecrets.json
     {
         "SHOPDOMAIN": "mystore.myshopify.com",
@@ -126,6 +135,6 @@ or run following Python script:
     vault_url = "https://kv-bingobongo-xhlfuyngyn.vault.azure.net"
     secrets = AzureSecrets(vault_url = vault_url, credential=DefaultAzureCredential()
                            )
-    secrets.load_jsonfile("mysecrets.json")
-  
+    secrets.load_json("mysecrets.json")
+    ```
     
