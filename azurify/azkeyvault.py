@@ -13,13 +13,7 @@ from azure.mgmt.keyvault import KeyVaultManagementClient
 from azure.mgmt.resource import ResourceManagementClient
 
 from azurify.azsecrets import AzSecretKeys
-
-
-DEFAULT_GROUP_NAME = os.environ.get("AZURE_DEFAULT_GROUP_NAME", None)
-DEFAULT_LOCATION = os.environ.get("AZURE_DEFAULT_LOCATION", None)
-DEFAULT_OBJECT_ID = os.environ.get("AZURE_DEFAULT_OBJECT_ID", None)
-DEFAULT_SUBSCRIPTION_ID = os.environ.get("AZURE_SUBSCRIPTION_ID", None)
-DEFAULT_TENANT_ID = os.environ.get("AZURE_TENANT_ID", None)
+from azurify.azenv import AzEnv
 
 
 @dataclass
@@ -34,11 +28,11 @@ class Secret:
 
 
 def resource_client(
-    group_name: str = DEFAULT_GROUP_NAME, location: str = DEFAULT_LOCATION
+    group_name: str = AzEnv.AZURE_DEFAULT_GROUP_NAME, location: str = AzEnv.AZURE_DEFAULT_LOCATION
 ) -> ResourceManagementClient:
     resource_client = ResourceManagementClient(
         credential = DefaultAzureCredential(),
-        subscription_id = DEFAULT_SUBSCRIPTION_ID,
+        subscription_id = AzEnv.AZURE_SUBSCRIPTION_ID,
     )
     resource_client.resource_groups.create_or_update(group_name, {"location": location})
     return resource_client
@@ -46,8 +40,8 @@ def resource_client(
 
 def keyvault_client() -> KeyVaultManagementClient:
     return KeyVaultManagementClient(
-        credential=DefaultAzureCredential(),
-        subscription_id=DEFAULT_SUBSCRIPTION_ID,
+        credential = DefaultAzureCredential(),
+        subscription_id = AzEnv.AZURE_SUBSCRIPTION_ID,
     )
 
 
@@ -112,17 +106,17 @@ class Keyvault:
 
     def create(self) -> None:
         self.keyvault_client.vaults.begin_create_or_update(
-            DEFAULT_GROUP_NAME,
+            AzEnv.AZURE_DEFAULT_GROUP_NAME,
             self.kv_name,
             {
-                "location": DEFAULT_LOCATION,
+                "location": AzEnv.AZURE_DEFAULT_LOCATION,
                 "properties": {
-                    "tenant_id": DEFAULT_TENANT_ID,
+                    "tenant_id": AzEnv.AZURE_TENANT_ID,
                     "sku": {"family": "A", "name": "standard"},
                     "access_policies": [
                         {
-                            "tenant_id": DEFAULT_TENANT_ID,
-                            "object_id": DEFAULT_OBJECT_ID,
+                            "tenant_id": AzEnv.AZURE_TENANT_ID,
+                            "object_id": AzEnv.AZURE_DEFAULT_OBJECT_ID,
                             "permissions": {
                                 "secrets": [
                                     "get",
@@ -143,10 +137,10 @@ class Keyvault:
 
     @property
     def keyvault(self):
-        return self.keyvault_client.vaults.get(DEFAULT_GROUP_NAME, self.kv_name)
+        return self.keyvault_client.vaults.get(AzEnv.AZURE_DEFAULT_GROUP_NAME, self.kv_name)
 
     def delete(self) -> None:
-        self.keyvault_client.vaults.delete(DEFAULT_GROUP_NAME, self.kv_name)
+        self.keyvault_client.vaults.delete(AzEnv.AZURE_DEFAULT_GROUP_NAME, self.kv_name)
 
 
 def main(shop_url: str) -> None:

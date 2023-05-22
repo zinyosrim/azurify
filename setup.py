@@ -5,7 +5,7 @@ with open("Readme.md", "r") as f:
 
 setup(
     name="azurify",
-    version="0.71",
+    version="0.72",
     description="Access to Azure Storage/Secrets/Keyvault for Shopify Apps built with Python.",
     long_description=long_description,
     long_description_content_type="text/markdown",

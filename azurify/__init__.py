@@ -3,6 +3,7 @@ __all__ = [
     "azkeyvault",
     "azsecrets",
     "azstorage",
+    "azenv",
 ]
 
 from azurify import *
