@@ -16,7 +16,6 @@ class ObjectToStore:
     """Object information including name, in which container it should reside
     and the data to be stored
     """
-
     object_name: str
     container_name: str
     data_to_store: io.BytesIO
